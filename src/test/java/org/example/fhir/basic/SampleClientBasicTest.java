@@ -21,15 +21,19 @@ public class SampleClientBasicTest {
     @Test
     public void getPatientsTest() {
 
-//        final List<Patient> patients = sampleClientBasic.getPatients("SMITH");
-        final List<Patient> patients = sampleClientBasic.getPatients("MCINTOSH");
+        final List<Patient> patients = sampleClientBasic.getPatients("SMITH");
 
         assertFalse(patients.isEmpty());
 
-        final String firstPatientGivenName = patients.get(0).getName().get(0).getGivenAsSingleString();
-        final String secondPatientGivenName = patients.get(1).getName().get(0).getGivenAsSingleString();
+        final String firstPatientGivenName = patients.get(0).getNameFirstRep().getGivenAsSingleString();
+        final String secondPatientGivenName = patients.get(1).getNameFirstRep().getGivenAsSingleString();
 
-        assertTrue("Should be negative to ensure proper ordering",
+        /*
+         * I noticed that the backend is returning a [James A] before [Aaliyah]. James A has an array of given names
+         * that are not being considered by the sorting spec. e.g. "given": [ "James", "A" ]. The test should work
+         * once the sorting issue is solved.
+         */
+        assertTrue("Should be negative to ensure proper ordering - Sorting is not correct",
                 firstPatientGivenName.compareTo(secondPatientGivenName) < 0);
 
     }

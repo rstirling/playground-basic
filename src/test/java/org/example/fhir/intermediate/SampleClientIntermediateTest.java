@@ -30,11 +30,13 @@ public class SampleClientIntermediateTest {
     }
 
     @Test
-    public void testGetCachedMultiple() {
+    public void testGetCachedMultiple() throws IOException {
 
-        final List<String> names = Arrays.asList("SMITH", "MCINTOSH", "BAER", "WILLIAMS", "FINNEY", "SANDHU");
+        final List<String> names = sampleClientIntermediate.getNamesFromFile();
 
-        //For the sake of simplicity the "isPresent()" was not called.
+        Assert.assertEquals(20, names.size());
+
+        //For the sake of simplicity the "isPresent()" was not called from Optional average().
         final double firstRound = names.stream()
                 .mapToLong(n -> sampleClientIntermediate.getPatientResponseTime(n, true))
                 .average()
@@ -58,5 +60,6 @@ public class SampleClientIntermediateTest {
     public void testGetNamesFromFile() throws IOException {
         final List<String> namesFromFile = sampleClientIntermediate.getNamesFromFile();
         Assert.assertFalse(namesFromFile.isEmpty());
+        Assert.assertEquals(20, namesFromFile.size());
     }
 }
