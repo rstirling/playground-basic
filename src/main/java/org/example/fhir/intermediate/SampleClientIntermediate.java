@@ -17,8 +17,8 @@ import java.util.List;
 public class SampleClientIntermediate {
 
     private final FhirContext fhirContext = FhirContext.forR4();
-    //    private final IGenericClient client = fhirContext.newRestfulGenericClient("http://hapi.fhir.org/baseR4");
-    private final IGenericClient client = fhirContext.newRestfulGenericClient("https://lforms-fhir.nlm.nih.gov/baseR4");
+        private final IGenericClient client = fhirContext.newRestfulGenericClient("http://hapi.fhir.org/baseR4");
+//    private final IGenericClient client = fhirContext.newRestfulGenericClient("https://lforms-fhir.nlm.nih.gov/baseR4"); //Alternative
     private final TimeInterceptor timeInterceptor;
 
     public SampleClientIntermediate() {
@@ -31,7 +31,7 @@ public class SampleClientIntermediate {
      * Gets a list of patient family names from a CVS file - ref. resources/Names.cvs
      *
      * @return list of Names
-     * @throws IOException
+     * @throws IOException if there is an error reading file
      */
     public List<String> getNamesFromFile() throws IOException {
         final Path path = Paths.get("src/main/resources/Names.csv");

@@ -19,8 +19,8 @@ public class SampleClientBasic {
     private static final Logger log = LoggerFactory.getLogger(SampleClientBasic.class);
 
     private final FhirContext fhirContext = FhirContext.forR4();
-    //    private final IGenericClient client = fhirContext.newRestfulGenericClient("http://hapi.fhir.org/baseR4");
-    private final IGenericClient client = fhirContext.newRestfulGenericClient("https://lforms-fhir.nlm.nih.gov/baseR4");
+        private final IGenericClient client = fhirContext.newRestfulGenericClient("http://hapi.fhir.org/baseR4");
+//    private final IGenericClient client = fhirContext.newRestfulGenericClient("https://lforms-fhir.nlm.nih.gov/baseR4");
 
     public SampleClientBasic() {
         client.registerInterceptor(new LoggingInterceptor(false));
@@ -29,7 +29,7 @@ public class SampleClientBasic {
     /**
      * Returns a list of patients filtered by family name and sorted by given name
      *
-     * @param familyName
+     * @param familyName patient's family name
      * @return list of Patients
      */
     public List<Patient> getPatients(String familyName) {
@@ -50,14 +50,18 @@ public class SampleClientBasic {
                 .stream()
                 .map(e -> (Patient) e.getResource())
                 .forEach(p -> log.info("Patient - fistName[{}], lastName[{}] and DoB[{}]",
-                        p.getName().get(0).getGiven().get(0).getValue(),
+                        p.getName().get(0).getGivenAsSingleString(),
                         p.getName().get(0).getFamily(),
-                        DateTimeFormatter.ofPattern("yyyy").format(p.getBirthDate().toInstant().atZone(ZoneId.systemDefault()))
+                        getDoB(p)
                 ));
 
         return response.getEntry().stream()
                 .map(e -> (Patient) e.getResource())
                 .collect(Collectors.toList());
+    }
+
+    private String getDoB(Patient p) {
+        return p.getBirthDate() != null ? DateTimeFormatter.ofPattern("yyyy-MM-dd").format(p.getBirthDate().toInstant().atZone(ZoneId.systemDefault())) : "Unknown";
     }
 
 }
