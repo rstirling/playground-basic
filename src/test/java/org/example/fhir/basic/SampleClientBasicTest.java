@@ -29,10 +29,27 @@ public class SampleClientBasicTest {
         final String secondPatientGivenName = patients.get(1).getNameFirstRep().getGivenAsSingleString();
 
         /*
-         * I noticed that the backend is returning a [James A] before [Aaliyah]. James A has an array of given names
+         * I noticed that the FHIR Server is returning a [James A] before [Aaliyah]. "James A" has an array of given names
          * that are not being considered by the sorting spec. e.g. "given": [ "James", "A" ]. The test should work
          * once the sorting issue is solved.
          */
+        assertTrue("Should be negative to ensure proper ordering - Sorting is not correct",
+                firstPatientGivenName.compareTo(secondPatientGivenName) < 0);
+
+    }
+
+    @Test
+    public void getPatientsSortedTest() {
+
+        final List<Patient> patients = sampleClientBasic.getPatients("SMITH");
+
+        assertFalse(patients.isEmpty());
+
+        final List<Patient> patientsSortedByGivenNames = sampleClientBasic.getPatientsSortedByGivenNames(patients);
+
+        final String firstPatientGivenName = patientsSortedByGivenNames.get(0).getNameFirstRep().getGivenAsSingleString();
+        final String secondPatientGivenName = patientsSortedByGivenNames.get(1).getNameFirstRep().getGivenAsSingleString();
+
         assertTrue("Should be negative to ensure proper ordering - Sorting is not correct",
                 firstPatientGivenName.compareTo(secondPatientGivenName) < 0);
 

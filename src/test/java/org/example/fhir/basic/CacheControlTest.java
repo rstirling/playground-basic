@@ -44,25 +44,20 @@ public class CacheControlTest {
 
         int round = 0;
 
+        CacheControlDirective cacheControl = new CacheControlDirective().setNoCache(false);
+
         while (round < 3) {
 
-            final CacheControlDirective cache = new CacheControlDirective().setNoCache(false);
+            if (round == 2) {
+                cacheControl = new CacheControlDirective().setNoCache(true);
+            }
+
             client.search()
                     .forResource("Patient")
                     .where(Patient.FAMILY.contains().values(names))
                     .returnBundle(Bundle.class)
-                    .cacheControl(cache)
+                    .cacheControl(cacheControl)
                     .execute();
-
-            if (round == 2) {
-                final CacheControlDirective noCache = new CacheControlDirective().setNoCache(true);
-                client.search()
-                        .forResource("Patient")
-                        .where(Patient.FAMILY.contains().values(names))
-                        .returnBundle(Bundle.class)
-                        .cacheControl(noCache)
-                        .execute();
-            }
 
             final long elapsedTime = timeInterceptor.getElapsedTimeAndRestart();
             results.put(round, elapsedTime);
